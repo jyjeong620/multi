@@ -4,25 +4,67 @@ plugins {
     id 'java'
 }
 
-group = 'com.example'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '17'
+// 모든 프로젝트에 적용할 환경 세팅
+allprojects {
 
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
+    group = 'com.example'
+    version = '0.0.1-SNAPSHOT'
+    sourceCompatibility = '17'
+
+    apply plugin: 'java'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'org.springframework.boot'
+    configurations {
+        compileOnly {
+            extendsFrom annotationProcessor
+        }
+    }
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+        compileOnly 'org.projectlombok:lombok'
+        annotationProcessor 'org.projectlombok:lombok'
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    }
+
+}
+
+
+
+
+subprojects {
+    // jar 파일을 생성하되 실행 가능하지 않는 jar로 생성
+    bootJar {
+        enabled = false
+    }
+    // jar 파일 생성
+    jar {
+        enabled = true
+    }
+
+}
+
+project(":multi-api"){
+
+    dependencies {
+        implementation project(":multi-core")
     }
 }
 
-repositories {
-    mavenCentral()
+project(":multi-core"){
+    dependencies {
+
+    }
 }
 
-dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+project(":multi-batch"){
+    dependencies {
+        implementation project(":multi-api")
+    }
 }
 
 test {

@@ -1,1 +1,5 @@
 rootProject.name = 'multi'
+include 'multi-api'
+include 'multi-core'
+include 'multi-batch'
+
